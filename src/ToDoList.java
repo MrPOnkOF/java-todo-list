@@ -1,31 +1,31 @@
 import java.util.ArrayList;
-import java.util.Arrays;
 
 
 public class ToDoList {
-    private ArrayList<String> tasks = new ArrayList<>();
-    private ArrayList<Boolean> completed = new ArrayList<>();
+    private ArrayList<Task> tasks =  new ArrayList<>();
 
 
     public void addDefaultTasks() {
-        addTask("Learn some Java");
-        addTask("Prepare for a test");
+        addTask("Learn some Java", Priority.HIGH);
+        addTask("Prepare for a test", Priority.HIGH);
     }
 
 
-    public void addTask(String task) {
-        if (task == null || task.isBlank()){
+    public void addTask(String name, Priority priority) {
+        if (name == null || name.isBlank()){
             throw new IllegalArgumentException("Task name cannot be empty");
         }
-        tasks.add(task);
-        completed.add(false);
+        Task newTask = new Task(name, priority);
+        tasks.add(newTask);
     }
 
     public void printTasks() {
         for (int i = 0; i < tasks.size(); i++) {
-            String status = completed.get(i) ? " -- Status: Completed: " : " -- Status: Not completed";
+            Task currentTask = tasks.get(i);
+            String status = currentTask.isCompleted() ? " -- Status: Completed: " : " -- Status: Not completed";
             int taskIndex = i + 1;
-            System.out.println(taskIndex + ". " + tasks.get(i) + status);
+            System.out.println(taskIndex + ". " + currentTask.getName()
+                    + status + " -- Priority: " + currentTask.getPriority());
         }
 
     }
@@ -33,8 +33,9 @@ public class ToDoList {
     public void completedTask(int taskNumber) {
         int index = taskNumber - 1;
         if (index >= 0 && index < tasks.size()) {
-            completed.set(index, true);
-            System.out.println(tasks.get(index) + " is now completed.");
+            Task currentTask = tasks.get(index);
+            currentTask.setCompleted(true);
+            System.out.println(currentTask.getName() + " is now completed.");
         } else {
             System.out.println("This number is not in the list");
         }
@@ -42,11 +43,14 @@ public class ToDoList {
     }
 
     public void showCompletedTasks() {
-        for (int i = 0; i < tasks.size(); i++) {
-            if (completed.get(i)) {
-                String status = completed.get(i) + " -- Status: Completed: ";
-                int taskIndex = i + 1;
-                System.out.println(taskIndex + ". " + tasks.get(i) + status);
+        for (int index = 0; index < tasks.size(); index++) {
+            Task currentTask = tasks.get(index);
+            if (currentTask.isCompleted()) {
+                String status = " -- Status: Completed ";
+                String priority = " -- Priority: " + currentTask.getPriority();
+                int taskIndex = index + 1;
+                System.out.println(taskIndex + ". " + currentTask.getName() + status
+                + priority);
 
         }
     }
@@ -54,41 +58,39 @@ public class ToDoList {
     public void removeTask(int taskNumber) {
         int index = taskNumber - 1;
         if (index >= 0 && index < tasks.size()) {
-            String name = tasks.get(index);
-            completed.remove(index);
+            Task currentTask = tasks.get(index);
+            String name = currentTask.getName();
             tasks.remove(index);
             System.out.println(name + " is now removed.");
+        }else{
+            System.out.println("This number is not in the list");
         }
     }
-    public void findTask(String nameOfTask) {
-        boolean found = false;
-        for (int i = 0; i < tasks.size(); i++) {
-            if (tasks.get(i).toLowerCase().contains(nameOfTask.toLowerCase())) {
-                found = true;
-                System.out.println(tasks.get(i) + " is found.");
+        public void findTask(String nameOfTask) {
+            boolean found = false;
+            for (int index = 0; index < tasks.size(); index++) {
+                Task currentTask = tasks.get(index);
+                String priority = " -- Priority: " + currentTask.getPriority();
+                if (currentTask.getName().toLowerCase().contains(nameOfTask.toLowerCase())) {
+                    found = true;
+                    System.out.println(currentTask.getName() + priority + " -- is found.");
+                }
+            }if (!found) {
+                System.out.println("This name is not found the list");
             }
-        }if (found == false) {
-            System.out.println("This name is not found the list");
         }
-    }
 
     public void removeTaskByName(String nameOfTask) {
-        boolean found = false;
 
-        for(int i = 0; i < tasks.size(); i++){
-            if(tasks.get(i).toLowerCase().contains(nameOfTask.toLowerCase())){
-                found = true;
-                String name = tasks.get(i);
-                completed.remove(i);
-                tasks.remove(i);
-                System.out.println(name + ": Is now removed");
+        for(int index = 0; index < tasks.size(); index++){
+            Task currentTask = tasks.get(index);
+            if(currentTask.getName().toLowerCase().contains(nameOfTask.toLowerCase())){
+                tasks.remove(index);
+                System.out.println(currentTask.getName() + ": Is now removed");
                 return;
             }
         }
-
-        if (found == false){
             System.out.println(nameOfTask + ": Is not found. The task is not removed");
-        }
     }
 
 }

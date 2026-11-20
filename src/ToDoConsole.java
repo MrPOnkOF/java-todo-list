@@ -36,9 +36,36 @@ public class ToDoConsole {
                     while (true){
                         System.out.print((i + 1) + ". ");
                     try {
+                        Priority priority;
                         String newTask = scan.nextLine();
-                        todoList.addTask(newTask);
-                        break;
+                        if (newTask == null || newTask.isBlank()){
+                            throw new IllegalArgumentException("Task can't be empty");
+                        }
+                        while (true) {
+                            System.out.println("Choose priority:\n" +
+                                    "1. LOW\n" +
+                                    "2. MEDIUM\n" +
+                                    "3. HIGH");
+
+                            int userChoice = readInt();
+                            switch (userChoice) {
+                                case 1:
+                                    priority = Priority.LOW;
+                                    break;
+                                case 2:
+                                    priority = Priority.MEDIUM;
+                                    break;
+                                case 3:
+                                    priority = Priority.HIGH;
+                                    break;
+                                default:
+                                    System.out.println("Invalid choice.");
+                                    continue;
+                            }
+
+                            todoList.addTask(newTask, priority);
+                            break;
+                        }break;
                     } catch (IllegalArgumentException e) {
                         System.out.println(e.getMessage());
                     }
