@@ -19,6 +19,7 @@ public class ToDoList {
         tasks.add(newTask);
     }
 
+
     public void printTasks() {
         for (int i = 0; i < tasks.size(); i++) {
             Task currentTask = tasks.get(i);
@@ -28,6 +29,14 @@ public class ToDoList {
                     + status + " -- Priority: " + currentTask.getPriority());
         }
 
+    }
+
+    public Task getTask(int TaskNumber){
+        return tasks.get(TaskNumber - 1);
+    }
+
+    public int getTaskCount(){
+        return tasks.size();
     }
 
     public void completedTask(int taskNumber) {
